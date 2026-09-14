@@ -1,0 +1,223 @@
+.blockquote-footer{
+    padding: 2.5rem;
+    color : lightgray;
+    text-align : center;
+    border-top: gray solid 4px;
+}
+section{
+    height: 40rem;
+}
+
+.fondo-presentacion{
+background: linear-gradient(135deg, rgba(130,0,211,1) 0%, rgba(121,9,83,1) 35%, rgba(0,237,255,1) 100%);
+}
+
+
+
+
+
+
+
+
+ :root {
+     --digital-color: #0dcaf0;
+     --tecnologia-color: #198754;
+     --entretenimiento-color: #ffc107;
+ }
+
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header {
+    background: linear-gradient(135deg, #2c3e50, #4ca1af);
+    color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.tema-section {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border-top: 4px solid;
+}
+
+.tema-digital {
+    border-top-color: var(--digital-color);
+}
+
+.tecnologia-digital {
+    border-top-color: var(--tecnologia-color);
+}
+
+.entretenimiento-digital {
+    border-top-color: var(--entretenimiento-color);
+}
+
+.tema-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #eee;
+    display: flex;
+    align-items: center;
+}
+
+.tema-title i {
+    margin-right: 10px;
+    font-size: 1.5rem;
+}
+
+.encuesta-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border-left: 4px solid;
+}
+
+.encuesta-digital {
+    border-left-color: var(--digital-color);
+}
+
+.encuesta-tecnologia {
+    border-left-color: var(--tecnologia-color);
+}
+
+.encuesta-entretenimiento {
+    border-left-color: var(--entretenimiento-color);
+}
+
+.encuesta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #eee;
+}
+
+.encuesta-title {
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.pregunta-item {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+}
+
+.pregunta-text {
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: #495057;
+}
+
+.respuesta-item {
+    margin-bottom: 0.75rem;
+}
+
+.respuesta-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.progress {
+    height: 10px;
+    border-radius: 5px;
+}
+
+.progress-bar-digital {
+    background-color: var(--digital-color);
+}
+
+.progress-bar-tecnologia {
+    background-color: var(--tecnologia-color);
+}
+
+.progress-bar-entretenimiento {
+    background-color: var(--entretenimiento-color);
+}
+
+.tendencia-card {
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-top: 1rem;
+    border-left: 3px solid;
+}
+
+.tendencia-digital {
+    border-left-color: var(--digital-color);
+}
+
+.tendencia-tecnologia {
+    border-left-color: var(--tecnologia-color);
+}
+
+.tendencia-entretenimiento {
+    border-left-color: var(--entretenimiento-color);
+}
+
+.tendencia-text {
+    font-weight: 500;
+    margin: 0;
+}
+
+.badge-tema {
+    padding: 0.35em 0.65em;
+    font-weight: 600;
+}
+
+.badge-digital {
+    background-color: var(--digital-color);
+}
+
+.badge-tecnologia {
+    background-color: var(--tecnologia-color);
+}
+
+.badge-entretenimiento {
+    background-color: var(--entretenimiento-color);
+    color: #212529;
+}
+
+.stats-summary {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.stat-item {
+    padding: 0 1rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+

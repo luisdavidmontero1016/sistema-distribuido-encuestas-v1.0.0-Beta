@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${'Encuesta: ' + encuesta.titulo}"></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    .encuesta-container {
+      max-width: 800px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .pregunta-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border-bottom: 1px solid #eee;
+    }
+    .opcion-item {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      transition: all 0.3s;
+      margin-bottom: 0.5rem;
+    }
+    .opcion-item:hover {
+      background-color: #f8f9fa;
+      border-color: #0d6efd;
+    }
+    [type="radio"]:checked + label {
+      font-weight: bold;
+      color: #0d6efd;
+    }
+    .progress-preguntas {
+      height: 6px;
+      margin-top: 1rem;
+    }
+    #btnAnterior {
+      visibility: hidden;
+    }
+  </style>
+</head>
+<body class="bg-light">
+<div class="container py-4">
+  <div class="encuesta-container bg-white p-4 p-md-5 mx-auto">
+    <h1 class="h3 mb-4 text-center" th:text="${encuesta.titulo}"></h1>
+    <p class="text-muted text-center mb-4" th:text="${encuesta.descripcion}"></p>
+
+    <div class="progress progress-preguntas">
+      <div class="progress-bar bg-info" role="progressbar" id="progressBar" style="width: 0%"></div>
+    </div>
+
+    <form th:action="@{'/votar/' + ${encuesta.id}}" method="post" id="encuestaForm">
+      <div th:each="pregunta, stat : ${encuesta.preguntas}"
+           class="pregunta-section"
+           th:classappend="${stat.index > 0} ? 'd-none' : ''"
+           th:attr="data-index=${stat.index}">
+        <h3 class="h5 mb-3" th:text="${'Pregunta ' + (stat.index + 1) + ': ' + pregunta.texto}"></h3>
+
+        <div th:each="opcion, opcionStat : ${pregunta.opciones}" class="opcion-item p-3">
+          <div class="form-check">
+            <input class="form-check-input"
+                   type="radio"
+                   th:name="${pregunta.id}"
+                   th:id="${'opcion' + stat.index + '-' + opcionStat.index}"
+                   th:value="${opcion}"
+                   required>
+            <label class="form-check-label w-100"
+                   th:for="${'opcion' + stat.index + '-' + opcionStat.index}"
+                   th:text="${opcion}"></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between mt-4">
+        <button type="button" class="btn btn-outline-secondary" id="btnAnterior">
+          <i class="bi bi-arrow-left"></i> Anterior
+        </button>
+
+        <button type="button" class="btn btn-primary" id="btnSiguiente">
+          Siguiente <i class="bi bi-arrow-right"></i>
+        </button>
+
+        <button type="submit" class="btn btn-success d-none" id="btnFinalizar">
+          <i class="bi bi-check-circle"></i> Finalizar Encuesta
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  document.addEventListener('DOMContentLoaded', function() {
+    let currentIndex = 0;
+    const preguntas = document.querySelectorAll('.pregunta-section');
+    const totalPreguntas = preguntas.length;
+    const btnAnterior = document.getElementById('btnAnterior');
+    const btnSiguiente = document.getElementById('btnSiguiente');
+    const btnFinalizar = document.getElementById('btnFinalizar');
+    const progressBar = document.getElementById('progressBar');
+
+    function updateUI() {
+      preguntas.forEach((pregunta, index) => {
+        pregunta.classList.toggle('d-none', index !== currentIndex);
+      });
+
+      const progress = ((currentIndex + 1) / totalPreguntas) * 100;
+      progressBar.style.width = progress + '%';
+
+      btnAnterior.style.visibility = currentIndex === 0 ? 'hidden' : 'visible';
+      btnSiguiente.classList.toggle('d-none', currentIndex === totalPreguntas - 1);
+      btnFinalizar.classList.toggle('d-none', currentIndex !== totalPreguntas - 1);
+    }
+
+    btnSiguiente.addEventListener('click', function() {
+      if (currentIndex < totalPreguntas - 1) {
+        currentIndex++;
+        updateUI();
+      }
+    });
+
+    btnAnterior.addEventListener('click', function() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateUI();
+      }
+    });
+
+    updateUI();
+  });
+  /*]]>*/
+</script>
+</body>
+</html>

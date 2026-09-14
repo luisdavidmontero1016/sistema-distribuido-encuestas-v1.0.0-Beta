@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Estadísticas de Encuestas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --digital-color: #0dcaf0;
+            --tecnologia-color: #198754;
+            --entretenimiento-color: #ffc107;
+        }
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #4ca1af);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .tema-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-top: 4px solid;
+        }
+        .tema-digital {
+            border-top-color: var(--digital-color);
+        }
+        .tecnologia-digital {
+            border-top-color: var(--tecnologia-color);
+        }
+        .entretenimiento-digital {
+            border-top-color: var(--entretenimiento-color);
+        }
+        .tema-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        .tema-title i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        .encuesta-card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid;
+        }
+        .encuesta-digital {
+            border-left-color: var(--digital-color);
+        }
+        .encuesta-tecnologia {
+            border-left-color: var(--tecnologia-color);
+        }
+        .encuesta-entretenimiento {
+            border-left-color: var(--entretenimiento-color);
+        }
+        .encuesta-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        .encuesta-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+        .pregunta-item {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+        }
+        .pregunta-text {
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: #495057;
+        }
+        .respuesta-item {
+            margin-bottom: 0.75rem;
+        }
+        .respuesta-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+        }
+        .progress-bar-digital {
+            background-color: var(--digital-color);
+        }
+        .progress-bar-tecnologia {
+            background-color: var(--tecnologia-color);
+        }
+        .progress-bar-entretenimiento {
+            background-color: var(--entretenimiento-color);
+        }
+        .tendencia-card {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-left: 3px solid;
+        }
+        .tendencia-digital {
+            border-left-color: var(--digital-color);
+        }
+        .tendencia-tecnologia {
+            border-left-color: var(--tecnologia-color);
+        }
+        .tendencia-entretenimiento {
+            border-left-color: var(--entretenimiento-color);
+        }
+        .tendencia-text {
+            font-weight: 500;
+            margin: 0;
+        }
+        .badge-tema {
+            padding: 0.35em 0.65em;
+            font-weight: 600;
+        }
+        .badge-digital {
+            background-color: var(--digital-color);
+        }
+        .badge-tecnologia {
+            background-color: var(--tecnologia-color);
+        }
+        .badge-entretenimiento {
+            background-color: var(--entretenimiento-color);
+            color: #212529;
+        }
+        .stats-summary {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .stat-item {
+            padding: 0 1rem;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mx-auto text-center">
+                <h1><i class="bi bi-bar-chart-line"></i> Estadísticas de Encuestas</h1>
+                <p class="lead">Resultados detallados de todas las encuestas realizadas</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <!-- Resumen Estadístico -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="stats-summary">
+                <div class="stat-item">
+                    <div class="stat-value" th:text="${#maps.size(encuestasPorTema)}">3</div>
+                    <div class="stat-label">Categorías</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value"
+                         th:text="${#lists.size(encuestasPorTema['Hábitos Digitales']) + #lists.size(encuestasPorTema['Tecnología']) + #lists.size(encuestasPorTema['Entretenimiento'])}">9
+                    </div>
+                    <div class="stat-label">Encuestas</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value"
+                         th:text="${(#lists.size(encuestasPorTema['Hábitos Digitales']) + #lists.size(encuestasPorTema['Tecnología']) + #lists.size(encuestasPorTema['Entretenimiento'])) * 5}">45
+                    </div>
+                    <div class="stat-label">Preguntas</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Iterar por cada tema -->
+    <div th:each="temaEntry : ${encuestasPorTema}">
+        <div class="tema-section"
+             th:classappend="${temaEntry.key == 'Hábitos Digitales' ? 'tema-digital' : (temaEntry.key == 'Tecnología' ? 'tecnologia-digital' : 'entretenimiento-digital')}"
+             th:unless="${temaEntry.value.empty}">
+            <h2 class="tema-title">
+                <i th:classappend="${temaEntry.key == 'Hábitos Digitales' ? 'bi bi-phone text-primary' : (temaEntry.key == 'Tecnología' ? 'bi bi-laptop text-success' : 'bi bi-controller text-warning')}"></i>
+                <span th:text="${temaEntry.key}"></span>
+            </h2>
+
+            <th:block th:each="estadistica : ${temaEntry.value}">
+                <div class="encuesta-card"
+                     th:classappend="${temaEntry.key == 'Hábitos Digitales' ? 'encuesta-digital' : (temaEntry.key == 'Tecnología' ? 'encuesta-tecnologia' : 'encuesta-entretenimiento')}">
+                    <div class="encuesta-header">
+                        <h3 class="encuesta-title" th:text="${estadistica.tituloEncuesta}"></h3>
+                        <span class="badge badge-tema"
+                              th:classappend="${temaEntry.key == 'Hábitos Digitales' ? 'badge-digital' : (temaEntry.key == 'Tecnología' ? 'badge-tecnologia' : 'badge-entretenimiento')}"
+                              th:text="${temaEntry.key}"></span>
+                    </div>
+
+                    <div class="pregunta-item">
+                        <h4 class="pregunta-text" th:text="${estadistica.pregunta}"></h4>
+
+                        <div th:each="entry : ${estadistica.porcentajes}" class="respuesta-item">
+                            <div class="respuesta-label">
+                                <span th:text="${entry.key}"></span>
+                                <span th:text="${entry.value} + '% (' + ${estadistica.resultados.get(entry.key)} + ' votos)'"></span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar"
+                                     th:classappend="${temaEntry.key == 'Hábitos Digitales' ? 'progress-bar-digital' : (temaEntry.key == 'Tecnología' ? 'progress-bar-tecnologia' : 'progress-bar-entretenimiento')}"
+                                     th:style="'width:' + ${entry.value} + '%'"
+                                     th:attr="aria-valuenow=${entry.value}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+
+                        <canvas th:attr="id='chart-' + ${estadistica.id}" style="max-width: 600px; height: 300px;"></canvas>
+
+                        <div class="tendencia-card"
+                             th:classappend="${temaEntry.key == 'Hábitos Digitales' ? 'tendencia-digital' : (temaEntry.key == 'Tecnología' ? 'tendencia-tecnologia' : 'tendencia-entretenimiento')}">
+                            <p class="tendencia-text">
+                                <i class="bi bi-star-fill"></i>
+                                <span th:text="${estadistica.tendencia}"></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </div>
+</div>
+<script id="json-encuestas" type="application/json" th:utext="${estadisticasJson}"></script>
+<script>
+    const rawJson = document.getElementById('json-encuestas').textContent;
+    const encuestas = JSON.parse(rawJson);
+
+    encuestas.forEach(function (estadistica) {
+        const canvas = document.getElementById('chart-' + estadistica.id);
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(estadistica.porcentajes),
+                datasets: [{
+                    label: '% Respuestas',
+                    data: Object.values(estadistica.porcentajes),
+                    backgroundColor: Object.keys(estadistica.porcentajes).map(() => 'rgba(54, 162, 235, 0.7)'),
+                    borderColor: Object.keys(estadistica.porcentajes).map(() => 'rgba(54, 162, 235, 1)'),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

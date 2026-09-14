@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Menú de Encuestas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}" />
+
+</head>
+
+<body class="bg-light">
+<div class="header">
+    <div class="container py-3">
+        <h1 class="text-center mb-2">Encuestas Disponibles</h1>
+        <p class="text-center subtitle">Bienvenido</p>
+
+        <!-- Barra de progreso -->
+        <div class="progress-container">
+            <div class="progress-text">
+                <span>Tu progreso</span>
+                <span th:text="${respondidas.size()} + '/' + ${encuestas.size()}">0/0</span>
+            </div>
+            <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar"
+                     th:style="'width: ' + ${respondidas.size() / encuestas.size() * 100} + '%;'"
+                     th:attr="aria-valuenow=${respondidas.size()}, aria-valuemax=${encuestas.size()}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <!-- Filtros por tema -->
+    <div class="filter-section">
+        <h4 class="mb-3">Filtrar por categoría</h4>
+        <div class="text-center">
+            <button type="button" class="btn btn-filter btn-digital active" data-filter="contenido">
+                <i class="bi bi-phone"></i> Hábitos Digitales
+            </button>
+            <button type="button" class="btn btn-filter btn-tecnologia" data-filter="tecnologia">
+                <i class="bi bi-laptop"></i> Tecnología
+            </button>
+            <button type="button" class="btn btn-filter btn-entretenimiento" data-filter="entretenimiento">
+                <i class="bi bi-controller"></i> Entretenimiento
+            </button>
+        </div>
+    </div>
+
+    <!-- Grid de encuestas -->
+    <div class="row g-4" id="encuestas-container">
+        <div th:each="encuesta : ${encuestas}"
+             th:if="${!respondidas.contains(encuesta.id)}"
+             th:attr="data-tema=${encuesta.tema}"
+             class="col-md-4 encuesta-item">
+            <div class="card h-100 encuesta-card">
+                <div th:classappend="${encuesta.tema == 'contenido' ? 'bg-digital' :
+                                    encuesta.tema == 'tecnologia' ? 'bg-tecnologia' : 'bg-entretenimiento'}"
+                     class="card-header">
+                    <div class="card-header-overlay"></div>
+                    <span th:class="${'tema-badge badge ' +
+                                    (encuesta.tema == 'contenido' ? 'bg-digital' :
+                                     encuesta.tema == 'tecnologia' ? 'bg-tecnologia' : 'bg-entretenimiento')}">
+                        <span th:text="${encuesta.tema == 'contenido' ? 'Digital' :
+                                      encuesta.tema == 'tecnologia' ? 'Tecnología' : 'Ocio'}"></span>
+                    </span>
+                    <h5 class="card-title px-3 pb-2" th:text="${encuesta.titulo}"></h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text" th:text="${encuesta.descripcion}"></p>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <i class="bi bi-question-circle"></i>
+                            <span th:text="${encuesta.preguntas.size()} + ' preguntas'"></span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="bi bi-clock"></i>
+                            <span th:text="${encuesta.preguntas.size() * 2} + ' min'"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a th:href="@{'/encuesta/' + ${encuesta.id}}" class="btn btn-primary btn-responder">
+                        <i class="bi bi-pencil-square me-2"></i>Responder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estado vacío si no hay encuestas -->
+        <div th:if="${encuestas.isEmpty()}" class="col-12">
+            <div class="empty-state">
+                <i class="bi bi-clipboard2-pulse"></i>
+                <h3>No hay encuestas disponibles</h3>
+                <p>En este momento no hay encuestas para mostrar. Por favor, revisa más tarde o contacta al administrador si crees que esto es un error.</p>
+                <button class="btn btn-outline-primary">Notificarme cuando haya nuevas</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mostrar encuestas de la categoría activa al cargar
+        const activeFilter = document.querySelector('.btn-filter.active').getAttribute('data-filter');
+        filterEncuestas(activeFilter);
+
+        // Configurar filtros
+        document.querySelectorAll('[data-filter]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const filter = this.getAttribute('data-filter');
+
+                // Actualizar botones activos
+                document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                // Filtrar encuestas
+                filterEncuestas(filter);
+            });
+        });
+
+        function filterEncuestas(filter) {
+            const encuestas = document.querySelectorAll('.encuesta-item');
+            let hasVisibleItems = false;
+
+            encuestas.forEach(item => {
+                const tema = item.getAttribute('data-tema');
+                if (tema === filter) {
+                    item.style.display = 'block';
+                    hasVisibleItems = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Mostrar estado vacío si no hay encuestas en la categoría
+            const emptyState = document.querySelector('.empty-state');
+            if (emptyState) {
+                emptyState.style.display = hasVisibleItems ? 'none' : 'block';
+            }
+        }
+    });
+</script>
+</body>
+</html>

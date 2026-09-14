@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Encuesta</title>
+    <style>
+        body { font-family: Arial; background: #f9f9f9; padding: 20px; }
+        h1 { color: #444; }
+        form { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 5px #ccc; }
+        .pregunta { margin-bottom: 20px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; }
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin: 5px 0; }
+    </style>
+</head>
+<body>
+<h1>Encuesta</h1>
+<form method="post" th:action="@{/votar}">
+    <div class="pregunta">
+        <label><strong>1. ¿Qué sistema operativo usas?</strong></label><br>
+        <input type="radio" name="sistemaOperativo" value="Windows" required> Windows<br>
+        <input type="radio" name="sistemaOperativo" value="Linux"> Linux<br>
+        <input type="radio" name="sistemaOperativo" value="macOS"> macOS<br>
+    </div>
+
+    <div class="pregunta">
+        <label><strong>2. ¿Te gusta programar?</strong></label><br>
+        <input type="radio" name="gustaProgramar" value="Sí" required> Sí<br>
+        <input type="radio" name="gustaProgramar" value="No"> No<br>
+    </div>
+
+    <button type="submit">Enviar respuestas</button>
+</form>
+
+<h2>Resultados actuales:</h2>
+<div th:each="pregunta : ${resultados}">
+    <h3 th:text="${pregunta.key}"></h3>
+    <ul>
+        <li th:each="opcion : ${pregunta.value}">
+            <span th:text="'• ' + ${opcion.key} + ': ' + ${opcion.value} + ' votos'"></span>
+        </li>
+    </ul>
+</div>
+</body>
+</html>
