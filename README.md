@@ -1,4 +1,4 @@
-•  SISTEMA DISTRIBUIDO DE ENCUESTAS RPC
+## •  SISTEMA DISTRIBUIDO DE ENCUESTAS RPC
 
 > Sistema distribuido de encuestas en tiempo real con arquitectura cliente-servidor (RPC), desarrollado en Java para la gestión concurrente y estadística de datos.
 
